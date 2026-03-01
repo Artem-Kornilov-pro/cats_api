@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  cat-api:
+    build: .
+    container_name: cat-randomizer-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - cat_images:/app/app/static
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+
+volumes:
+  cat_images:
