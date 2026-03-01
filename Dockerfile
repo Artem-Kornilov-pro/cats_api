@@ -19,8 +19,8 @@ COPY app/ ./app/
 # Создаем директорию для статических файлов
 RUN mkdir -p /app/app/static
 
-# Открываем порт
+# Открываем порт (внутренний порт контейнера)
 EXPOSE 8000
 
 # Команда для запуска приложения
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

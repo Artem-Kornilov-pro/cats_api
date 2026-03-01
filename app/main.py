@@ -69,14 +69,26 @@ async def get_random_cat_image():
         image_path = STATIC_DIR / f"{cat_id}.png"
         
         if not image_path.exists():
+            # Если изображение не создалось, пробуем еще раз
+            cat_id = cat_generator.generate_random_cat("Meow")
+            image_path = STATIC_DIR / f"{cat_id}.png"
+        
+        if not image_path.exists():
             raise HTTPException(status_code=404, detail="Cat image not found")
         
+        # Читаем файл и возвращаем с правильными заголовками
+        from fastapi.responses import FileResponse
         return FileResponse(
-            image_path, 
+            path=image_path,
             media_type="image/png",
-            headers={"X-Cat-ID": cat_id, "X-Cat-Message": random.choice(CAT_QUOTES)}
+            headers={
+                "X-Cat-ID": cat_id,
+                "X-Cat-Message": "Meow",
+                "Cache-Control": "no-cache"
+            }
         )
     except Exception as e:
+        print(f"Error in get_random_cat_image: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/cat/image/{cat_id}")
