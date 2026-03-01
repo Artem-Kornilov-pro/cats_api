@@ -51,17 +51,9 @@ async def root():
         }
     }
 
-@app.get("/random-cat")
-async def random_cat():
-    """Возвращает URL случайного кота"""
-    cat_id = cat_generator.generate_random_cat()
-    return {
-        "id": cat_id,
-        "url": f"/cat/image/{cat_id}",
-        "message": random.choice(CAT_QUOTES)
-    }
 
-@app.get("/cat/image/random")
+
+@app.get("/cat/image/random", description="Получить случайное изображение кота")
 async def get_random_cat_image():
     """Возвращает случайное изображение кота"""
     try:
@@ -91,7 +83,7 @@ async def get_random_cat_image():
         print(f"Error in get_random_cat_image: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/cat/image/{cat_id}")
+@app.get("/cat/image/{cat_id}", description="Получить изображение кота по ID")
 async def get_cat_image(cat_id: str):
     """Возвращает изображение кота по ID"""
     image_path = STATIC_DIR / f"{cat_id}.png"
@@ -105,7 +97,7 @@ async def get_cat_image(cat_id: str):
         headers={"X-Cat-ID": cat_id}
     )
 
-@app.get("/cats")
+@app.get("/cats", description="Список всех доступных котов")
 async def list_cats():
     """Список всех доступных котов"""
     cats = []
@@ -121,7 +113,7 @@ async def list_cats():
         "cats": cats
     }
 
-@app.post("/generate")
+@app.post("/generate", description="Генерирует нового кота с сообщением")
 async def generate_new_cat(message: str = None):
     """Генерирует нового кота с опциональным сообщением"""
     if not message:
